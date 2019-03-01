@@ -1,5 +1,3 @@
-﻿// applied_math_lab_1.cpp : Defines the entry point for the console application.
-//
 #include "stdafx.h"
 #include "malloc.h"
 unsigned int *fib_gen(unsigned int x_next,unsigned int x_prev, unsigned int m,unsigned int count) {
