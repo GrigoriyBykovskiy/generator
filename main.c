@@ -1,15 +1,23 @@
-#include "stdafx.h"
+// generator.cpp : Defines the entry point for the console application.
+//
+#include "stdio.h"
 #include "malloc.h"
-unsigned int *fib_gen(unsigned int x_next,unsigned int x_prev, unsigned int m,unsigned int count) {
-	unsigned int *storage;
-	if ((storage = (unsigned int*)malloc(count * sizeof(unsigned int))) != NULL) {
-		unsigned int element;
+#define OUTPUTFILE "OUTPUT.csv"
+#define MAXINT 2147483647	// 2^31 - 1
+int *fib_gen(int x_next, int x_prev,int m, int length) {
+	int *storage;
+	if ((storage = (int*)malloc(length * sizeof(int))) != NULL) {
+		int element;
 		storage[0] = x_prev;
 		storage[1] = x_next;
-		for (int i = 0; i < count-2; i++) {
-			element = (storage[i+1]+storage[i]) % m;
-			storage[i + 2] = element;
-			printf("%d\n", element);
+		for (int i = 0; i < length - 2; i++) {
+			// (a + b) mod n = [(a mod n) + (b mod n)] mod n
+			int sum = (storage[i] % m) + (storage[i + 1] % m);
+			if (sum < 0) {
+				sum += (MAXINT + 1);
+			}
+			element = sum%m;
+			storage[i + 2] = element; 
 		}
 		return storage;
 	}
@@ -17,27 +25,28 @@ unsigned int *fib_gen(unsigned int x_next,unsigned int x_prev, unsigned int m,un
 		printf("Out of memory!\n");
 	}
 };
-unsigned int *lkg(unsigned int a,unsigned int x, unsigned int c, unsigned int m, unsigned int count) {
-	unsigned int *storage;
-	if ((storage = (unsigned int*)malloc(count * sizeof(unsigned int))) != NULL) {
-		unsigned int element;
-		storage[0] = x;
-		for (int i = 0; i < count - 1; i++) {
-			element = (a*storage[i]+c) % m;
-			storage[i + 1] = element;
-			printf("%d\n", element);
+float *normalize(int *selection, int m, int length) {
+	float *normalize_selection;
+	if ((normalize_selection = (float*)malloc(length * sizeof(float))) != NULL) {
+		for (int i = 0; i < length; i++) {
+			printf("%d\n", selection[i]);
+			normalize_selection[i] = ((float) selection[i]) / m;
+			printf("%d\n", normalize_selection[i]);
 		}
-		return storage;
+		return normalize_selection;
 	}
-	else {
-		printf("Out of memory!\n");
-	}
-};
-void normalize(unsigned int *selection) {
 };
 int main()
 {
-	unsigned int *selection;
-    return 0;
+	int *selection = fib_gen(11, 56, MAXINT, 500);
+	/*for (int i = 1;i<500;i++) {
+		if (selection[0] == selection[i]) printf("T=%d", i);
+		printf("%d\n",selection[i]);
+	}*/
+	float *normalize_selection = normalize(&selection[0], MAXINT, 500);
+	/*for (int i = 1; i<500; i++) {
+		if (normalize_selection[0] == normalize_selection[i]) printf("T=%d", i);
+		printf("%d\n", normalize_selection[i]);
+	}*/
+	return 0;
 }
-
